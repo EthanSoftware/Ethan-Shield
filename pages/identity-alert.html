@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Identity Threat — EthanGuard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+  :root{--bg:#05050a;--surface:#0d0d18;--border:#1e1e32;--text:#e8e6f5;--muted:#5a5878;--red:#e05252;--red-dim:#1e0808}
+  html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;display:flex;align-items:center;justify-content:center}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(224,82,82,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(224,82,82,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+  .wrap{position:relative;width:100%;max-width:560px;margin:24px;padding:48px 44px;background:var(--surface);border:1px solid rgba(224,82,82,.2);border-radius:24px;text-align:center;box-shadow:0 0 80px rgba(224,82,82,.1)}
+  .logo-wrap{width:52px;height:52px;margin:0 auto 20px;border-radius:12px;overflow:hidden;background:#fff}
+  .logo-wrap svg{width:100%;height:100%}
+  .threat-icon{margin:0 auto 20px}
+  h1{font-size:26px;font-weight:700;color:#ff7070;margin-bottom:8px;letter-spacing:-.3px}
+  .sub{font-size:14px;color:var(--muted);margin-bottom:20px;line-height:1.5}
+  .site-badge{display:inline-block;background:var(--red-dim);border:1px solid rgba(224,82,82,.3);border-radius:8px;padding:6px 14px;font-size:13px;color:#ff9090;font-family:monospace;margin-bottom:24px}
+  .signals{text-align:left;display:grid;gap:8px;margin-bottom:28px}
+  .signal{display:flex;align-items:center;gap:10px;background:rgba(224,82,82,.05);border:1px solid rgba(224,82,82,.12);border-radius:10px;padding:10px 14px;font-size:12px;color:#cc8080}
+  .signal-icon{font-size:16px;flex-shrink:0}
+  .btn-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .btn-block{background:var(--red);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s}
+  .btn-block:hover{background:#f06060}
+  .btn-allow{background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:12px;cursor:pointer;font-family:inherit;transition:all .15s}
+  .btn-allow:hover{border-color:#555;color:#999}
+  .footer-brand{margin-top:28px;padding-top:16px;border-top:1px solid #1a1020;font-size:10px;color:#2a1a2a;letter-spacing:1.5px;text-transform:uppercase}
+  .pulse{animation:pulse 2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+      <rect width="500" height="500" fill="#FFFFFF"/>
+      <g transform="translate(135,110)">
+        <text x="120" y="235" font-family="'Playfair Display','Didot','Bodoni MT','Times New Roman',serif" font-size="240" font-weight="700" font-style="italic" fill="#000000" text-anchor="middle">E.</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Threat icon -->
+  <svg class="threat-icon pulse" width="68" height="68" viewBox="0 0 68 68" fill="none">
+    <defs>
+      <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#e05252" stop-opacity=".25"/>
+        <stop offset="100%" stop-color="#e05252" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <circle cx="34" cy="34" r="34" fill="url(#rg)"/>
+    <circle cx="34" cy="34" r="26" fill="none" stroke="#e05252" stroke-width="1.5" opacity=".3"/>
+    <path d="M34 10L12 22V38C12 50.5 21.5 62 34 66C46.5 62 56 50.5 56 38V22L34 10Z" fill="#e05252" fill-opacity=".12" stroke="#e05252" stroke-width="2"/>
+    <path d="M26 26L34 34M34 34L42 42M34 34L42 26M34 34L26 42" stroke="#ff7070" stroke-width="2.5" stroke-linecap="round"/>
+  </svg>
+
+  <h1>Identity Threat Detected</h1>
+  <div class="sub">EthanGuard has identified this site as a potential phishing or credential harvesting attack.</div>
+  <div class="site-badge" id="site-badge">unknown</div>
+
+  <div class="signals" id="signals">
+    <div class="signal"><div class="signal-icon">🎣</div>Phishing pattern detected in URL — mimics a trusted service</div>
+    <div class="signal"><div class="signal-icon">🔑</div>May be attempting to steal your username and password</div>
+    <div class="signal"><div class="signal-icon">📧</div>Commonly used to hijack email, banking, or social accounts</div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-block" onclick="history.length>1?history.back():window.close()">🛡 Take Me to Safety</button>
+    <button class="btn-allow" id="btn-proceed">I know the risk — proceed</button>
+  </div>
+
+  <div class="footer-brand">Identity Protection by Ethan Software · EthanGuard v2.0</div>
+</div>
+<script>
+const p = new URLSearchParams(location.search);
+const site = p.get("site") || "this site";
+const rawUrl = p.get("url") || "";
+document.getElementById("site-badge").textContent = site;
+document.getElementById("btn-proceed").onclick = () => {
+  if (rawUrl) location.href = rawUrl;
+  else history.back();
+};
+chrome.storage.sync.get(["orgName"], (data) => {
+  if (data.orgName) document.title = "Identity Threat — " + data.orgName;
+});
+</script>
+</body>
+</html>

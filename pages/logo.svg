@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" width="100%" height="100%">
+  <rect width="500" height="500" fill="#FFFFFF"/>
+  <g transform="translate(135, 110)">
+    <text x="120" y="235" font-family="'Playfair Display','Didot','Bodoni MT','Times New Roman',serif" font-size="240" font-weight="700" font-style="italic" fill="#000000" text-anchor="middle">E.</text>
+  </g>
+</svg>

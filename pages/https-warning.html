@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Insecure Connection — EthanGuard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#05050a; --surface:#0d0d18; --border:#1e1e32; --text:#e8e6f5; --muted:#5a5878; --warn:#e09040; --warn-dim:#2a1a00; }
+  html,body { min-height:100vh; background:var(--bg); color:var(--text); font-family:'Inter',-apple-system,sans-serif; display:flex; align-items:center; justify-content:center; }
+  body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(224,144,64,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(224,144,64,.03) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; }
+  .wrap { position:relative; width:100%; max-width:580px; margin:24px; padding:48px 44px; background:var(--surface); border:1px solid var(--border); border-radius:24px; text-align:center; box-shadow:0 0 80px rgba(224,144,64,.06); }
+  .logo-wrap { width:56px; height:56px; margin:0 auto 24px; border-radius:14px; overflow:hidden; background:#fff; }
+  .logo-wrap svg { width:100%; height:100%; }
+  .warn-icon { margin:0 auto 20px; }
+  h1 { font-size:26px; font-weight:600; color:#fff; margin-bottom:10px; letter-spacing:-.3px; }
+  .site-badge { display:inline-block; background:var(--warn-dim); border:1px solid rgba(224,144,64,.3); border-radius:8px; padding:6px 14px; font-size:13px; color:#ffb060; font-family:monospace; margin-bottom:20px; }
+  .info-cards { display:grid; gap:10px; margin:24px 0; text-align:left; }
+  .info-card { background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:12px; padding:14px 16px; display:flex; gap:12px; align-items:flex-start; }
+  .info-card-icon { font-size:18px; flex-shrink:0; margin-top:1px; }
+  .info-card-title { font-size:12px; font-weight:600; color:#fff; margin-bottom:3px; }
+  .info-card-text { font-size:12px; color:var(--muted); line-height:1.5; }
+  .btn-row { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:28px; }
+  .btn-safe { background:#6c63ff; color:#fff; border:none; border-radius:10px; padding:11px 24px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; transition:all .15s; }
+  .btn-safe:hover { background:#7c74ff; }
+  .btn-continue { background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:10px; padding:11px 24px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; transition:all .15s; }
+  .btn-continue:hover { border-color:#555; color:#aaa; }
+  .footer-brand { margin-top:28px; padding-top:16px; border-top:1px solid var(--border); font-size:10px; color:#2a2840; letter-spacing:1.5px; text-transform:uppercase; }
+  .cert-extra { background:rgba(224,82,82,.06); border:1px solid rgba(224,82,82,.2); border-radius:10px; padding:12px 16px; margin-bottom:0; font-size:12px; color:#ff9090; text-align:left; display:none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+      <rect width="500" height="500" fill="#FFFFFF"/>
+      <g transform="translate(135,110)">
+        <text x="120" y="235" font-family="'Playfair Display','Didot','Bodoni MT','Times New Roman',serif" font-size="240" font-weight="700" font-style="italic" fill="#000000" text-anchor="middle">E.</text>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Warning icon SVG -->
+  <svg class="warn-icon" width="68" height="68" viewBox="0 0 68 68" fill="none">
+    <defs>
+      <linearGradient id="wg" x1="0" y1="0" x2="68" y2="68" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#e09040"/>
+        <stop offset="100%" stop-color="#b06020"/>
+      </linearGradient>
+    </defs>
+    <path d="M34 8L6 58h56L34 8Z" fill="url(#wg)" opacity=".12"/>
+    <path d="M34 8L6 58h56L34 8Z" stroke="#e09040" stroke-width="2" fill="none" stroke-linejoin="round"/>
+    <rect x="32" y="26" width="4" height="16" rx="2" fill="#e09040"/>
+    <circle cx="34" cy="48" r="2.5" fill="#e09040"/>
+  </svg>
+
+  <h1 id="page-title">Insecure Connection Detected</h1>
+  <div class="site-badge" id="site-badge">unknown</div>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <div class="info-card-icon">🔓</div>
+      <div>
+        <div class="info-card-title">No encryption</div>
+        <div class="info-card-text">This site uses HTTP, not HTTPS. Everything you send — passwords, personal data, card numbers — travels in plain text that anyone on the same network can read.</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-card-icon">🕵️</div>
+      <div>
+        <div class="info-card-title">Network interception risk</div>
+        <div class="info-card-text">On public Wi-Fi or shared networks, attackers can intercept, read, and modify everything between you and this site (man-in-the-middle attack).</div>
+      </div>
+    </div>
+    <div class="info-card" id="cert-card" style="display:none">
+      <div class="info-card-icon">⚠️</div>
+      <div>
+        <div class="info-card-title">Suspicious domain</div>
+        <div class="info-card-text">This domain uses a TLD (.tk, .ml, .xyz, etc.) commonly associated with free, throwaway, or malicious sites. Be extremely cautious.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-safe" id="btn-https">Try Secure Version (HTTPS)</button>
+    <button class="btn-continue" id="btn-continue">Continue Anyway — I Understand the Risk</button>
+  </div>
+
+  <div class="footer-brand" id="org-footer">Protected by Ethan Software · EthanGuard v2.0</div>
+</div>
+<script>
+const p = new URLSearchParams(location.search);
+const site = p.get("site") || "this site";
+const rawUrl = p.get("url") || "";
+const isCert = p.get("cert") === "1";
+
+document.getElementById("site-badge").textContent = site;
+
+if (isCert) {
+  document.getElementById("page-title").textContent = "Suspicious Site Detected";
+  document.getElementById("cert-card").style.display = "flex";
+}
+
+// Try HTTPS button
+document.getElementById("btn-https").onclick = () => {
+  if (rawUrl) {
+    const httpsUrl = rawUrl.replace(/^http:\/\//i, "https://");
+    location.href = httpsUrl;
+  } else {
+    location.href = "https://" + site;
+  }
+};
+
+// Continue anyway — go to original
+document.getElementById("btn-continue").onclick = () => {
+  if (rawUrl) {
+    // Mark as acknowledged so we don't loop
+    chrome.storage.session?.set({ ["httpsAck_" + site]: true });
+    location.href = rawUrl;
+  } else {
+    history.back();
+  }
+};
+
+chrome.storage.sync.get(["orgName"], (data) => {
+  if (data.orgName) document.getElementById("org-footer").textContent = "Protected by " + data.orgName + " · Ethan Software";
+});
+</script>
+</body>
+</html>

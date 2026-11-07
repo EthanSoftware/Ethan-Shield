@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EthanGuard Settings</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+  :root{
+    --bg:#05050a;--surface:#0d0d18;--surface2:#111120;
+    --border:#1e1e32;--border2:#252540;
+    --text:#e8e6f5;--muted:#5a5878;
+    --accent:#6c63ff;--green:#3ecf8e;--red:#e05252;
+  }
+
+  html,body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;min-height:100vh;}
+
+  /* Sidebar layout */
+  .layout{display:flex;min-height:100vh;}
+
+  /* Sidebar */
+  .sidebar{
+    width:220px;flex-shrink:0;
+    background:var(--surface);
+    border-right:1px solid var(--border);
+    padding:28px 16px;
+    display:flex;flex-direction:column;gap:4px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+
+  .sidebar-logo{
+    display:flex;align-items:center;gap:10px;
+    padding:0 6px;margin-bottom:24px;
+  }
+
+  .sidebar-logo-img{
+    width:36px;height:36px;border-radius:9px;
+    overflow:hidden;background:#fff;flex-shrink:0;
+  }
+
+  .sidebar-logo-img svg{width:100%;height:100%;}
+  .sidebar-logo-name{font-size:14px;font-weight:700;color:#fff;}
+  .sidebar-logo-ver{font-size:9px;color:var(--muted);margin-top:1px;}
+
+  .nav-label{font-size:8px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);padding:14px 8px 4px;}
+
+  .nav-item{
+    display:flex;align-items:center;gap:9px;
+    padding:8px 10px;border-radius:8px;
+    font-size:12px;font-weight:500;color:var(--muted);
+    cursor:pointer;transition:all .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left;
+  }
+
+  .nav-item:hover,.nav-item.active{background:rgba(108,99,255,.12);color:#a09cff;}
+  .nav-item.active{font-weight:600;}
+  .nav-icon{font-size:14px;width:18px;text-align:center;}
+
+  /* Main content */
+  .main{flex:1;padding:36px 40px;max-width:720px;}
+
+  .page-section{display:none;}
+  .page-section.active{display:block;}
+
+  h2{font-size:20px;font-weight:700;color:#fff;margin-bottom:4px;}
+  .page-desc{font-size:13px;color:var(--muted);margin-bottom:28px;line-height:1.5;}
+
+  /* Cards */
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:14px;}
+  .card-title{font-size:12px;font-weight:600;color:#fff;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+  .card-title-icon{font-size:15px;}
+
+  /* Form fields */
+  .field{margin-bottom:16px;}
+  .field:last-child{margin-bottom:0;}
+  label.field-label{display:block;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px;}
+
+  input[type="text"],input[type="url"],textarea,select{
+    width:100%;background:var(--surface2);border:1px solid var(--border);
+    border-radius:8px;padding:9px 12px;color:var(--text);
+    font-size:12px;outline:none;font-family:inherit;
+    transition:border-color .15s;
+  }
+
+  input:focus,textarea:focus,select:focus{border-color:var(--accent);}
+  input::placeholder,textarea::placeholder{color:#2e2e50;}
+  textarea{resize:vertical;min-height:90px;font-family:'SF Mono','Fira Code',monospace;font-size:11px;}
+
+  /* Logo preview */
+  .logo-preview-row{display:flex;align-items:center;gap:14px;margin-top:10px;}
+  #logo-preview-box{width:52px;height:52px;border-radius:12px;overflow:hidden;background:#fff;border:1px solid var(--border);flex-shrink:0;}
+  #logo-preview-box svg,#logo-preview-box img{width:100%;height:100%;object-fit:contain;}
+
+  /* ID row */
+  .id-row{display:flex;gap:8px;align-items:center;}
+  .id-display{
+    flex:1;background:var(--surface2);border:1px solid var(--border);
+    border-radius:8px;padding:9px 12px;font-family:monospace;
+    font-size:12px;color:var(--accent);
+  }
+
+  .copy-btn{
+    background:none;border:1px solid var(--border2);border-radius:7px;
+    padding:7px 12px;color:var(--muted);font-size:10px;cursor:pointer;
+    font-family:inherit;transition:all .15s;
+  }
+
+  .copy-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+  /* Status indicators */
+  .always-on-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    background:rgba(62,207,142,.08);border:1px solid rgba(62,207,142,.2);
+    border-radius:6px;padding:3px 9px;font-size:9px;font-weight:600;
+    color:var(--green);letter-spacing:.5px;text-transform:uppercase;
+  }
+
+  .always-on-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+
+  .protection-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:12px 0;border-bottom:1px solid var(--border);
+  }
+
+  .protection-row:last-child{border-bottom:none;padding-bottom:0;}
+  .protection-row:first-child{padding-top:0;}
+
+  .prot-left{display:flex;align-items:center;gap:10px;}
+  .prot-icon{font-size:16px;width:22px;text-align:center;}
+  .prot-name{font-size:12px;font-weight:500;color:#ccc;}
+  .prot-desc{font-size:10px;color:var(--muted);margin-top:2px;}
+
+  /* Save button */
+  .save-btn{
+    background:var(--accent);color:#fff;border:none;
+    border-radius:10px;padding:12px 28px;font-size:13px;
+    font-weight:700;cursor:pointer;font-family:inherit;
+    transition:all .15s;margin-top:4px;
+  }
+
+  .save-btn:hover{background:#7c74ff;transform:translateY(-1px);}
+
+  /* Toast */
+  .toast{
+    position:fixed;bottom:24px;left:50%;
+    transform:translateX(-50%) translateY(60px);
+    background:var(--green);color:#0a2a1e;
+    padding:10px 24px;border-radius:20px;
+    font-size:12px;font-weight:700;
+    transition:transform .3s;z-index:999;
+  }
+
+  .toast.show{transform:translateX(-50%) translateY(0);}
+
+  /* Stats overview on dashboard */
+  .stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:0;}
+  .stat-card{
+    background:var(--surface2);border:1px solid var(--border);
+    border-radius:10px;padding:14px;text-align:center;
+  }
+  .stat-card-num{font-size:22px;font-weight:700;color:var(--accent);}
+  .stat-card-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-top:3px;}
+
+  .reset-link{font-size:10px;color:var(--muted);cursor:pointer;text-align:right;display:block;margin-top:10px;}
+  .reset-link:hover{color:var(--red);}
+
+  /* Footer */
+  .sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
+  .sidebar-footer-text{font-size:9px;color:#1e1e30;text-transform:uppercase;letter-spacing:.8px;text-align:center;}
+</style>
+</head>
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <nav class="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-img" id="sidebar-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+          <rect width="500" height="500" fill="#fff"/>
+          <g transform="translate(135,110)">
+            <text x="120" y="235" font-family="'Playfair Display','Didot','Bodoni MT','Times New Roman',serif" font-size="240" font-weight="700" font-style="italic" fill="#000" text-anchor="middle">E.</text>
+          </g>
+        </svg>
+      </div>
+      <div>
+        <div class="sidebar-logo-name" id="sidebar-org-name">EthanGuard</div>
+        <div class="sidebar-logo-ver">v2.0 · Ethan Software</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Overview</div>
+    <button class="nav-item active" data-page="dashboard">
+      <span class="nav-icon">📊</span> Dashboard
+    </button>
+
+    <div class="nav-label">Configuration</div>
+    <button class="nav-item" data-page="branding">
+      <span class="nav-icon">🏢</span> Branding
+    </button>
+    <button class="nav-item" data-page="blocklist">
+      <span class="nav-icon">🚫</span> Block Lists
+    </button>
+    <button class="nav-item" data-page="allowlist">
+      <span class="nav-icon">✅</span> Allow List
+    </button>
+    <button class="nav-item" data-page="protection">
+      <span class="nav-icon">🛡️</span> Protection Status
+    </button>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-footer-text">Ethan Software</div>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Dashboard -->
+    <section class="page-section active" id="page-dashboard">
+      <h2>Dashboard</h2>
+      <p class="page-desc">Protection stats for this device.</p>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">📊</span> Lifetime Stats</div>
+        <div class="stat-grid">
+          <div class="stat-card"><div class="stat-card-num" id="ds-total">0</div><div class="stat-card-label">Total Blocked</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ds-ads">0</div><div class="stat-card-label">Ads</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ds-trackers">0</div><div class="stat-card-label">Trackers</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ds-sites">0</div><div class="stat-card-label">Sites Blocked</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ds-https">0</div><div class="stat-card-label">HTTPS Warnings</div></div>
+          <div class="stat-card"><div class="stat-card-num" id="ds-identity">0</div><div class="stat-card-label">Identity Threats</div></div>
+        </div>
+        <a class="reset-link" id="reset-stats-btn">Reset stats</a>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">🔑</span> Device Identity</div>
+        <div class="field">
+          <label class="field-label">User ID</label>
+          <div class="id-row">
+            <div class="id-display" id="uid-display">—</div>
+            <button class="copy-btn" id="copy-uid-btn">Copy</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Branding -->
+    <section class="page-section" id="page-branding">
+      <h2>Organization Branding</h2>
+      <p class="page-desc">Customize how EthanGuard appears across all protection pages.</p>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">🏢</span> Identity</div>
+        <div class="field">
+          <label class="field-label">Organization Name</label>
+          <input type="text" id="org-name-input" placeholder="e.g. Westview High School">
+        </div>
+        <div class="field">
+          <label class="field-label">Logo URL <span style="color:#3a3a60;font-size:9px;">(optional — appears on all blocked/warning pages)</span></label>
+          <input type="url" id="org-logo-input" placeholder="https://yourorg.com/logo.png">
+          <div class="logo-preview-row">
+            <div id="logo-preview-box">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+                <rect width="500" height="500" fill="#fff"/>
+                <g transform="translate(135,110)">
+                  <text x="120" y="235" font-family="serif" font-size="240" font-weight="700" font-style="italic" fill="#000" text-anchor="middle">E.</text>
+                </g>
+              </svg>
+            </div>
+            <div style="font-size:11px;color:var(--muted);line-height:1.6;">Logo displays on blocked pages,<br>HTTPS warnings, and identity alerts.</div>
+          </div>
+        </div>
+        <button class="save-btn" id="save-branding-btn">Save Branding</button>
+      </div>
+    </section>
+
+    <!-- Block Lists -->
+    <section class="page-section" id="page-blocklist">
+      <h2>Custom Block List</h2>
+      <p class="page-desc">Add domains to block in addition to the built-in lists. One domain per line.</p>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">🚫</span> Blocked Domains</div>
+        <div class="field">
+          <label class="field-label">Domains (one per line)</label>
+          <textarea id="blocklist-textarea" placeholder="tiktok.com&#10;discord.com&#10;steam.com&#10;reddit.com"></textarea>
+        </div>
+        <button class="save-btn" id="save-blocklist-btn">Save Block List</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">📋</span> Built-in Categories (Always Blocked)</div>
+        <div style="display:grid;gap:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:#ccc;">🎮 Online Games & Unblocked Sites</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:#ccc;">👥 Social Media Platforms</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:#ccc;">💬 Messaging Apps</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:#ccc;">🎰 Gambling Sites</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;border-bottom:1px solid var(--border);">
+            <span style="color:#ccc;">🔞 Adult Content</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;padding:6px 0;">
+            <span style="color:#ccc;">🚫 Proxies, VPNs & Bypass Tools</span>
+            <span class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:10px;color:var(--muted);line-height:1.6;padding:10px;background:rgba(224,82,82,.04);border:1px solid rgba(224,82,82,.1);border-radius:8px;">
+          ⚠️ These categories cannot be disabled from this interface. Contact your administrator if you need a site unblocked.
+        </div>
+      </div>
+    </section>
+
+    <!-- Allow List -->
+    <section class="page-section" id="page-allowlist">
+      <h2>Allow List</h2>
+      <p class="page-desc">Domains here will always be allowed, even if they appear in a block list.</p>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">✅</span> Trusted Domains</div>
+        <div class="field">
+          <label class="field-label">Allowed Domains (one per line)</label>
+          <textarea id="allowlist-textarea" placeholder="school.edu&#10;google.com&#10;wikipedia.org"></textarea>
+        </div>
+        <button class="save-btn" id="save-allowlist-btn">Save Allow List</button>
+      </div>
+    </section>
+
+    <!-- Protection Status -->
+    <section class="page-section" id="page-protection">
+      <h2>Protection Status</h2>
+      <p class="page-desc">Overview of all active security layers on this device.</p>
+      <div class="card">
+        <div class="card-title"><span class="card-title-icon">🛡️</span> Active Protections</div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🚫</span>
+            <div><div class="prot-name">Ad Blocking</div><div class="prot-desc">2,000+ ad network domains blocked at network level</div></div>
+          </div>
+          <span id="badge-ads" class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🕵️</span>
+            <div><div class="prot-name">Tracker Protection</div><div class="prot-desc">2,000+ tracker domains + canvas/audio fingerprint noise</div></div>
+          </div>
+          <span id="badge-trackers" class="always-on-badge"><span class="always-on-dot"></span>Active</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🌐</span>
+            <div><div class="prot-name">Site Blocking</div><div class="prot-desc">1,300+ domains: games, gambling, adult, social, proxies</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🔐</span>
+            <div><div class="prot-name">HTTPS Enforcement</div><div class="prot-desc">Warns on HTTP, upgrades to HTTPS, blocks bad TLDs</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🛡️</span>
+            <div><div class="prot-name">Identity Protection</div><div class="prot-desc">Phishing URL detection + HTTP password warnings</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🖼️</span>
+            <div><div class="prot-name">Iframe Protection</div><div class="prot-desc">Blocks ad, tracker, and social iframes from loading</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🔍</span>
+            <div><div class="prot-name">SafeSearch</div><div class="prot-desc">Enforces safe mode on Google, Bing, DuckDuckGo, YouTube</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+        <div class="protection-row">
+          <div class="prot-left">
+            <span class="prot-icon">🧬</span>
+            <div><div class="prot-name">Fingerprint Defense</div><div class="prot-desc">Canvas noise, battery API block, screen spoof</div></div>
+          </div>
+          <span class="always-on-badge"><span class="always-on-dot"></span>Always On</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<div class="toast" id="toast">✓ Saved</div>
+
+<script src="options.js"></script>
+</body>
+</html>

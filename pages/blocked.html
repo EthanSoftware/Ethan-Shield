@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Blocked — EthanGuard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,700&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+  :root {
+    --bg: #05050a;
+    --surface: #0d0d18;
+    --border: #1e1e32;
+    --text: #e8e6f5;
+    --muted: #5a5878;
+    --accent: #6c63ff;
+    --danger: #e05252;
+    --danger-dim: #2a1010;
+  }
+
+  html, body {
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Subtle grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(108,99,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(108,99,255,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  .wrap {
+    position: relative;
+    width: 100%;
+    max-width: 540px;
+    margin: 24px;
+    padding: 56px 48px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    text-align: center;
+    box-shadow: 0 0 80px rgba(108,99,255,.08), 0 0 0 1px rgba(108,99,255,.06);
+  }
+
+  /* Logo */
+  .logo-wrap {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 28px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 4px 24px rgba(0,0,0,.4);
+  }
+
+  .logo-wrap svg, .logo-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  /* Org pill */
+  .org-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(108,99,255,.12);
+    border: 1px solid rgba(108,99,255,.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9490ff;
+    margin-bottom: 24px;
+  }
+
+  /* Shield icon */
+  .shield-icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+  }
+
+  h1 {
+    font-family: 'Inter', sans-serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 12px;
+    letter-spacing: -.3px;
+  }
+
+  .blocked-domain {
+    display: inline-block;
+    background: var(--danger-dim);
+    border: 1px solid rgba(224,82,82,.3);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #ff8080;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    margin-bottom: 20px;
+    word-break: break-all;
+  }
+
+  p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+
+  .reason-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #7a789a;
+    margin-bottom: 32px;
+  }
+
+  .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 13px 32px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .15s;
+    text-decoration: none;
+    font-family: inherit;
+  }
+  .btn-back:hover { background: #7c74ff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(108,99,255,.35); }
+
+  .footer-brand {
+    margin-top: 36px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: #2a2840;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  /* Category icons */
+  .cat-icon { font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="logo-wrap" id="logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+      <rect width="500" height="500" fill="#FFFFFF"/>
+      <g transform="translate(135, 110)">
+        <text x="120" y="235" font-family="'Playfair Display','Didot','Bodoni MT','Times New Roman',serif" font-size="240" font-weight="700" font-style="italic" fill="#000000" text-anchor="middle">E.</text>
+      </g>
+    </svg>
+  </div>
+
+  <div class="org-pill" id="org-pill">
+    <span>🛡</span>
+    <span id="org-name-pill">EthanGuard</span>
+  </div>
+
+  <svg class="shield-icon" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="sg" x1="0" y1="0" x2="72" y2="72" gradientUnits="userSpaceOnUse">
+        <stop offset="0%" stop-color="#e05252"/>
+        <stop offset="100%" stop-color="#b03030"/>
+      </linearGradient>
+    </defs>
+    <path d="M36 6L10 18V34C10 48.5 21 61.5 36 66C51 61.5 62 48.5 62 34V18L36 6Z" fill="url(#sg)" opacity=".15"/>
+    <path d="M36 6L10 18V34C10 48.5 21 61.5 36 66C51 61.5 62 48.5 62 34V18L36 6Z" stroke="#e05252" stroke-width="2" fill="none"/>
+    <line x1="26" y1="26" x2="46" y2="46" stroke="#e05252" stroke-width="3" stroke-linecap="round"/>
+    <line x1="46" y1="26" x2="26" y2="46" stroke="#e05252" stroke-width="3" stroke-linecap="round"/>
+  </svg>
+
+  <h1>Access Blocked</h1>
+  <div class="blocked-domain" id="blocked-domain">this site</div>
+
+  <div class="reason-badge">
+    <span class="cat-icon" id="cat-icon">🔒</span>
+    <span id="reason-text">Blocked by security policy</span>
+  </div>
+
+  <p id="desc-text">This website is blocked by your organization's security policy. It has been identified as potentially harmful or falls into a restricted category.</p>
+
+  <button class="btn-back" onclick="history.length>1 ? history.back() : window.close()">
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 12L6 8l4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Go Back
+  </button>
+
+  <div class="footer-brand">Protected by Ethan Software · EthanGuard v2.0</div>
+</div>
+
+<script>
+const params = new URLSearchParams(location.search);
+const site = params.get("site");
+const reason = params.get("reason") || "policy";
+
+if (site) document.getElementById("blocked-domain").textContent = site;
+
+// Categorize reason
+const reasons = {
+  social:    { icon: "👥", text: "Social media is blocked", desc: "Social media platforms are restricted to maintain focus and productivity." },
+  games:     { icon: "🎮", text: "Gaming sites are blocked", desc: "Online games are blocked by your organization's acceptable use policy." },
+  adult:     { icon: "🔞", text: "Adult content blocked", desc: "This site contains adult content and is blocked by your organization's safety policy." },
+  gambling:  { icon: "🎰", text: "Gambling sites are blocked", desc: "Gambling and sports betting sites are restricted." },
+  proxy:     { icon: "🚫", text: "Proxy/bypass blocked", desc: "Attempts to bypass security controls are not allowed." },
+  messaging: { icon: "💬", text: "Messaging apps blocked", desc: "Messaging platforms are blocked during this session." },
+  policy:    { icon: "🔒", text: "Blocked by security policy", desc: "This website has been identified as restricted by your organization's security policy." },
+};
+
+const r = reasons[reason] || reasons.policy;
+document.getElementById("cat-icon").textContent = r.icon;
+document.getElementById("reason-text").textContent = r.text;
+document.getElementById("desc-text").textContent = r.desc;
+
+// Load org branding
+chrome.storage.sync.get(["orgName","orgLogo"], (data) => {
+  if (data.orgName) {
+    document.getElementById("org-name-pill").textContent = data.orgName;
+    document.title = "Blocked — " + data.orgName;
+  }
+  if (data.orgLogo) {
+    const wrap = document.getElementById("logo-wrap");
+    wrap.innerHTML = `<img src="${data.orgLogo}" alt="Logo" onerror="this.parentElement.innerHTML='<svg xmlns=\\'http://www.w3.org/2000/svg\\' viewBox=\\'0 0 500 500\\'><rect width=\\'500\\' height=\\'500\\' fill=\\'#fff\\'/><text x=\\'250\\' y=\\'310\\' font-size=\\'240\\' text-anchor=\\'middle\\' font-style=\\'italic\\' font-weight=\\'700\\' font-family=\\'serif\\'>E.</text></svg>'">`;
+  }
+});
+</script>
+</body>
+</html>
