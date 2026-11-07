@@ -1,0 +1,13 @@
+[
+  {"id":3001,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||fingerprintjs.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3002,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||threatmetrix.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3003,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||iovation.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3004,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||sift.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3005,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||ipqualityscore.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3006,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||maxmind.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3007,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"*fingerprintjs*","resourceTypes":["script"]}},
+  {"id":3008,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"*fingerprint2*","resourceTypes":["script"]}},
+  {"id":3009,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"*clientjs*","resourceTypes":["script"]}},
+  {"id":3010,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||ipapi.com^","resourceTypes":["script","xmlhttprequest"]}},
+  {"id":3011,"priority":1,"action":{"type":"block"},"condition":{"urlFilter":"||ipinfo.io^","resourceTypes":["script","xmlhttprequest"]}}
+]
